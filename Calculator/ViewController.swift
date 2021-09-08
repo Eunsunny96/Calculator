@@ -63,16 +63,63 @@ class ViewController: UIViewController {
     }
     
     @IBAction func tapDivideButton(_ sender: UIButton) {
+        self.operation(.Divide)
     }
     
     @IBAction func tapMultiplyButton(_ sender: UIButton) {
+        self.operation(.Muliply)
     }
     @IBAction func tapSubtrackButton(_ sender: UIButton) {
+        self.operation(.Subtrack)
     }
     @IBAction func tapAddbutton(_ sender: UIButton) {
+        self.operation(.Add)
     }
     
     @IBAction func tapEqualButton(_ sender: roundButton) {
+        self.operation(self.currentOperation)
+    }
+    
+    //
+    func operation(_ operation: Operation){
+        if self.currentOperation != .unknown{
+            if !self.displayNumber.isEmpty {
+                self.secondOperand = self.displayNumber
+                self.displayNumber = ""
+                
+                guard let firstOperand = Double(self.firstOperand) else { return}
+                guard let secondOperand = Double (self.secondOperand) else { return }
+                
+                switch self.currentOperation {
+                case .Add:
+                    self.result = "\(firstOperand + secondOperand)"
+                case .Subtrack:
+                    self.result = "\(firstOperand - secondOperand)"
+                case .Divide:
+                    self.result = "\(firstOperand / secondOperand)"
+                case .Muliply:
+                    self.result = "\(firstOperand * secondOperand)"
+                
+                default :
+                    break
+                }
+                // 1로나눈 나머지값이 0이라면 Int타입으로 변환
+                if let result = Double(self.result), result.truncatingRemainder(dividingBy: 1) == 0 {
+                    self.result = "\(Int(result))"
+                }
+                self.firstOperand = self.result
+                // 연산된 결과값 표시
+                self.numberOutputLabel.text = self.result
+                    
+                }
+            // 연산된 값을 저장
+            self.currentOperation = operation
+            
+        }else{
+            self.firstOperand = self.displayNumber
+            self.currentOperation = operation
+            // 이전에 눌렀던 숫자 없서짐
+            self.displayNumber = ""
+        }
     }
 }
-
